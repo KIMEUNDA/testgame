@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-// --- [이미지 import] 요청하신 경로와 이름을 엄격히 준수합니다 ---
+// --- [이미지 import] 경로와 대소문자를 엄격히 준수합니다 ---
 import bgImg from './assets/bg-img.jpg';
 import dog1 from './assets/dog1.png';
 import dog2 from './assets/dog2.png'; 
-import gameBg from './assets/home.jpg';
+import gameBg from './assets/home.jpg'; // 혹은 home.JPG (너의 파일명에 맞춰줘멍!)
 import charNormal from './assets/character-normal.png'; 
 import charHappy from './assets/character-happy.png';   
-import imgF from './assets/so.png';         // 오답 도장 (유급)
+import imgF from './assets/so.png';         
 import resBad from './assets/angry.png';      
 import resNormal from './assets/so.png';   
 import resGood from './assets/good.png';      
@@ -16,7 +16,7 @@ import resGood from './assets/good.png';
 interface Option { text: string; score: number; }
 interface Question { id: number; question: string; options: Option[]; comment: string; }
 
-// --- 퀴즈 데이터 (예시 데이터 포함, 필요시 80문제로 확장) ---
+// --- 퀴즈 데이터 ---
 const fullQuizData: Question[] = [
   { id: 1, question: "동일한 테스트 케이스로 반복 테스트하면 더 이상 버그를 못 찾는다멍! 이 현상은?", options: [{ text: "살충제 패러독스", score: 20 }, { text: "오류-부재의 궤변", score: -10 }], comment: "정답! 계속 새로운 테스트 케이스를 만들어야 한다멍!" },
   { id: 2, question: "프로토콜의 기본 3요소는 구문(Syntax), 의미(Semantics), 그리고 하나는 뭐냐멍?", options: [{ text: "시간(Timing)", score: 20 }, { text: "처리량(Throughput)", score: -10 }], comment: "딩동댕! 구의시(구문, 의미, 시간)라고 외워라멍!" },
@@ -97,12 +97,17 @@ const fullQuizData: Question[] = [
   { id: 80, question: "데이터를 정해진 규칙에 따라 재정리하여 무결성을 보장하는 보안 기술은?", options: [{ text: "암호화", score: 20 }, { text: "압축", score: -10 }], comment: "정답! 읽을 수 없게 만드는 암호화다멍!" },
 ];
 
-// --- 이론 공부 데이터 (나만의 언어로 요약!) ---
+// --- 이론 공부 데이터 ---
 const studyData = [
   { title: "🏗️ 디자인 패턴 (생·구·행)", content: "생성(Factory, Singleton), 구조(Adapter, Bridge), 행위(Observer, State)! 각각의 역할을 구분하는 게 핵심이다멍!" },
   { title: "💾 데이터베이스 정규화", content: "1NF(원자값), 2NF(부분함수 종속 제거), 3NF(이행함수 종속 제거)! '도부이결다조' 앞글자를 따서 외워라멍!" },
   { title: "🌐 OSI 7계층", content: "물-데-네-전-세-표-응! 3계층은 라우터(IP), 4계층은 TCP/UDP가 활동하는 영역이다멍!" },
 ];
+
+// 셔플 함수 (선택지를 무작위로 섞음)
+const shuffle = (array: any[]) => {
+  return [...array].sort(() => Math.random() - 0.5);
+};
 
 export default function App() {
   const [gameState, setGameState] = useState<'title' | 'playing' | 'result' | 'review' | 'study'>('title');
@@ -112,15 +117,21 @@ export default function App() {
   const [showComment, setShowComment] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [wrongAnswers, setWrongAnswers] = useState<Question[]>([]);
+  
+  // 현재 섞인 선택지를 저장할 상태
+  const [shuffledOptions, setShuffledOptions] = useState<Option[]>([]);
 
   // 게임 시작 로직
   const startNewGame = () => {
-    const shuffled = [...fullQuizData].sort(() => Math.random() - 0.5);
-    setQuizSet(shuffled.slice(0, 20)); // 20문제 랜덤 추출
+    const shuffledQuiz = shuffle(fullQuizData).slice(0, 20); // 20문제 랜덤 추출
+    setQuizSet(shuffledQuiz);
     setCurrentIdx(0);
     setTotalScore(0);
     setGameState('playing');
     setShowComment(false);
+    
+    // 첫 번째 문제 선택지 섞기
+    setShuffledOptions(shuffle(shuffledQuiz[0].options));
   };
 
   // 정답 제출 로직
@@ -137,13 +148,16 @@ export default function App() {
     
     setTimeout(() => {
       if (currentIdx + 1 < quizSet.length) {
-        setCurrentIdx(prev => prev + 1);
+        const nextIdx = currentIdx + 1;
+        setCurrentIdx(nextIdx);
+        // 다음 문제 선택지 미리 섞기
+        setShuffledOptions(shuffle(quizSet[nextIdx].options));
         setShowComment(false);
         setIsCorrect(null);
       } else {
         setGameState('result');
       }
-    }, 2000);
+    }, 1800);
   };
 
   // --- 1. 시작 화면 ---
@@ -213,7 +227,7 @@ export default function App() {
     );
   }
 
-  // --- 4. 게임 중 화면 (말풍선 + 캐릭터 교체 레이아웃) ---
+  // --- 4. 게임 중 화면 ---
   if (gameState === 'playing' && quizSet.length > 0) {
     const q = quizSet[currentIdx];
     return (
@@ -222,14 +236,14 @@ export default function App() {
           <div className="bg-black/40 px-6 py-2 rounded-full border-2 border-white/50">Q {currentIdx + 1} / 20</div>
           <div className="bg-pink-500 px-6 py-2 rounded-full border-2 border-white shadow-lg">💕 {totalScore}점</div>
         </div>
-        {/* 질문 말풍선 */}
+        
         <div className="w-[90%] max-w-4xl mt-6 bg-white/90 rounded-[3rem] p-8 md:p-12 shadow-2xl border-[6px] border-pink-200 relative">
           <h2 className="text-2xl md:text-4xl font-black text-slate-800 text-center leading-snug">
-            {showComment ? (isCorrect ? "⭕ 정답이다멍!" : "❌ 다시.") : `"${q.question}"`}
+            {showComment ? (isCorrect ? "⭕ 정답이다멍!" : "❌ 틀렸다멍!") : `"${q.question}"`}
           </h2>
           <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[30px] border-t-pink-200"></div>
         </div>
-        {/* 중앙 캐릭터 */}
+
         <div className="flex-grow flex items-center justify-center relative w-full">
           {showComment && !isCorrect && <img src={imgF} className="absolute z-30 w-48 md:w-64 animate-ping" alt="F" />}
           <img 
@@ -238,27 +252,22 @@ export default function App() {
             alt="character" 
           />
         </div>
-        {/* 하단 버튼 */}
+
         <div className="w-full max-w-4xl px-6 pb-12 grid grid-cols-1 gap-4 z-20">
           {showComment ? (
             <div className="bg-black/60 p-8 rounded-3xl text-white text-center text-2xl font-bold animate-pulse border-2 border-white/30">{q.comment}</div>
           ) : (
-            q.options.map((opt, i) => (
+            shuffledOptions.map((opt, i) => (
               <button key={i} onClick={() => handleAnswer(opt.score)} className="bg-white hover:bg-pink-100 text-slate-800 text-2xl md:text-3xl font-black py-6 rounded-2xl shadow-[0_8px_0_#ddd] active:translate-y-2 active:shadow-none transition-all border-2 border-slate-200">
-                {i + 1}. {opt.text}
+                {opt.text}
               </button>
             ))
           )}
         </div>
-        {/* 좌측 하단 처음으로 버튼 (추가된 부분) */}
+
         <button 
-          onClick={() => {
-            if(window.confirm("태초마을")) {
-              setGameState('title');
-            }
-          }}
+          onClick={() => { if(window.confirm("태초마을로 갈래?")) setGameState('title'); }}
           className="absolute bottom-6 left-6 w-16 h-16 bg-slate-800/80 hover:bg-slate-800 text-white rounded-full flex items-center justify-center text-3xl shadow-lg transition-all active:scale-90 z-30 border-2 border-white/30"
-          title="처음으로"
         >
           🏠
         </button>
@@ -270,7 +279,7 @@ export default function App() {
   const result = (totalScore >= 80) 
     ? { img: resGood, txt: "눈아 이제 코딩 공부해도 돼\n나 간식사줘", col: "text-pink-600" }
     : (totalScore >= 60) 
-    ? { img: resNormal, txt: "공부 더 해\n누나는 구름이랑 같이 안 살거야?", col: "text-blue-600" }
+    ? { img: resNormal, txt: "공부 더 해\n구름이랑 같이 안 살거야?", col: "text-blue-600" }
     : { img: resBad, txt: "누나. 공부 좀 해\n누나가 구름이 대신 집 지키려고?", col: "text-gray-600" };
 
   return (
