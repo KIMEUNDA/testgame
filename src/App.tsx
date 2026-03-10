@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // --- [이미지 import] 요청하신 경로와 이름을 엄격히 준수합니다 ---
 import bgImg from './assets/bg-img.jpg';
