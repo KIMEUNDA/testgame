@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 // --- [이미지 import] 요청하신 경로와 이름을 엄격히 준수합니다 ---
-import bgImg from './assets/bg-img.jpg'; 
-import gameBg from './assets/home.jpg';         // 요청하신 .jpg 확장자 반영
+import bgImg from './assets/bg-img.jpg';
 import dog1 from './assets/dog1.png';
 import dog2 from './assets/dog2.png'; 
+import gameBg from './assets/bg-img.jpg';
 import charNormal from './assets/character-normal.png'; 
 import charHappy from './assets/character-happy.png';   
 import imgF from './assets/so.png';         // 오답 도장 (유급)
