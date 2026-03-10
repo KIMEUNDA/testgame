@@ -4,7 +4,7 @@ import { useState } from 'react';
 import bgImg from './assets/bg-img.jpg';
 import dog1 from './assets/dog1.png';
 import dog2 from './assets/dog2.png'; 
-import gameBg from './assets/bg-img.jpg';
+import gameBg from './assets/home.jpg';
 import charNormal from './assets/character-normal.png'; 
 import charHappy from './assets/character-happy.png';   
 import imgF from './assets/so.png';         // 오답 도장 (유급)
