@@ -275,10 +275,10 @@ export default function App() {
           <h1 className="text-6xl md:text-8xl font-black drop-shadow-2xl italic mb-10 animate-bounce text-center">우겨넣자 정처기!</h1>
           
           <div className="grid grid-cols-2 gap-4 w-full max-w-xl mb-6">
-            <button onClick={() => startNewGame('Normal')} className="bg-pink-500 text-white text-xl md:text-2xl p-6 rounded-3xl shadow-[0_8px_0_#be185d] active:translate-y-2 active:shadow-none transition-all font-black">🔘 일반모드</button>
-            <button onClick={() => startNewGame('Short')} className="bg-indigo-500 text-white text-xl md:text-2xl p-6 rounded-3xl shadow-[0_8px_0_#4338ca] active:translate-y-2 active:shadow-none transition-all font-black">✍️ 단답형</button>
-            <button onClick={() => startNewGame('Code')} className="bg-slate-500 text-white text-xl md:text-2xl p-6 rounded-3xl opacity-70 cursor-not-allowed font-black">💻 코드(준비)</button>
-            <button onClick={() => startNewGame('Mixed')} className="bg-amber-500 text-white text-xl md:text-2xl p-6 rounded-3xl shadow-[0_8px_0_#b45309] active:translate-y-2 active:shadow-none transition-all font-black">🌪️ 복합형</button>
+            <button onClick={() => startNewGame('Normal')} className="bg-pink-500 text-white text-xl md:text-2xl p-6 rounded-3xl shadow-[0_8px_0_#be185d] active:translate-y-2 active:shadow-none transition-all font-black">일반모드</button>
+            <button onClick={() => startNewGame('Short')} className="bg-indigo-500 text-white text-xl md:text-2xl p-6 rounded-3xl shadow-[0_8px_0_#4338ca] active:translate-y-2 active:shadow-none transition-all font-black">단답형</button>
+            <button onClick={() => startNewGame('Code')} className="bg-slate-500 text-white text-xl md:text-2xl p-6 rounded-3xl opacity-70 cursor-not-allowed font-black">코드(준비)</button>
+            <button onClick={() => startNewGame('Mixed')} className="bg-amber-500 text-white text-xl md:text-2xl p-6 rounded-3xl shadow-[0_8px_0_#b45309] active:translate-y-2 active:shadow-none transition-all font-black">복합형</button>
           </div>
 
           <div className="flex gap-4">
@@ -302,7 +302,7 @@ export default function App() {
         <h2 className="text-4xl font-black mb-8">{isReview ? '오답노트' : '요약노트'}</h2>
         <div className="w-full max-w-4xl flex-grow">
           {isReview ? (
-            wrongAnswers.length === 0 ? <p className="text-center text-2xl font-bold text-slate-400 mt-20">클린하다멍! 🐾</p> :
+            wrongAnswers.length === 0 ? <p className="text-center text-2xl font-bold text-slate-400 mt-20">아직은 살려줄게🐾</p> :
             wrongAnswers.map(q => (
               <div key={q.id} className="bg-white p-6 rounded-3xl shadow-md border-l-8 border-red-400 mb-4">
                 <p className="text-xl font-bold mb-2">Q. {q.question}</p>
@@ -335,7 +335,7 @@ export default function App() {
         
         <div className="w-[90%] max-w-4xl mt-6 bg-white/90 rounded-[3rem] p-8 md:p-12 shadow-2xl border-[6px] border-pink-200 relative">
           <h2 className="text-2xl md:text-3xl font-black text-slate-800 text-center leading-snug">
-            {showComment ? (isCorrect ? "⭕ 정답이다멍!" : "❌ 틀렸다멍!") : `"${q.question}"`}
+            {showComment ? (isCorrect ? "⭕ 정답이다멍!" : "다시.") : `"${q.question}"`}
           </h2>
         </div>
 
