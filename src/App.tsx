@@ -205,7 +205,7 @@ export default function App() {
   // 게임 시작 로직
   const startNewGame = (mode: GameMode) => {
     if (mode === 'Code') {
-      alert("아직 공사 중이다멍! 🚧 조금만 기다려달라멍!");
+      alert("아직");
       return;
     }
     const shuffledQuiz = shuffle(fullQuizData).slice(0, 20);
@@ -266,11 +266,14 @@ export default function App() {
     handleAnswer(isRight);
   };
 
-  // --- 1. 시작 화면 (모드 선택 버튼들) ---
+  // --- 1. 시작 화면 (애니메이션 복구 완료!) ---
   if (gameState === 'title') {
     return (
       <div className="relative w-screen h-screen overflow-hidden flex flex-col">
+        {/* 배경 레이어 */}
         <div className="absolute inset-0 bg-cover bg-center -z-10" style={{ backgroundImage: `url(${bgImg})` }}></div>
+        
+        {/* 중앙 콘텐츠 */}
         <div className="flex-[5] flex flex-col items-center justify-center z-20 text-white pt-10 px-4">
           <h1 className="text-6xl md:text-8xl font-black drop-shadow-2xl italic mb-10 animate-bounce text-center">우겨넣자 정처기!</h1>
           
@@ -286,10 +289,20 @@ export default function App() {
             <button onClick={() => setGameState('study')} className="bg-amber-600 text-white px-8 py-4 rounded-2xl font-bold">요약 노트</button>
           </div>
         </div>
-        <div className="flex-[4] flex items-end justify-around px-20">
+
+        {/* 하단 강아지들 (애니메이션 적용 부분) */}
+        <div className="flex-[4] flex items-end justify-around px-20 relative z-10">
           <img src={dog1} className="h-[40vh] object-contain animate-tilt-left" alt="dog1" />
           <img src={dog2} className="h-[40vh] object-contain animate-tilt-right" alt="dog2" />
         </div>
+
+        {/*  다시 살려낸 CSS 애니메이션 태그! */}
+        <style>{`
+          @keyframes tL { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-30deg); } }
+          @keyframes tR { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(30deg); } }
+          .animate-tilt-left { animation: tL 0.9s ease-in-out infinite; transform-origin: bottom center; }
+          .animate-tilt-right { animation: tR 0.9s ease-in-out infinite 0.1s; transform-origin: bottom center; }
+        `}</style>
       </div>
     );
   }
@@ -302,7 +315,7 @@ export default function App() {
         <h2 className="text-4xl font-black mb-8">{isReview ? '오답노트' : '요약노트'}</h2>
         <div className="w-full max-w-4xl flex-grow">
           {isReview ? (
-            wrongAnswers.length === 0 ? <p className="text-center text-2xl font-bold text-slate-400 mt-20">아직은 살려줄게🐾</p> :
+            wrongAnswers.length === 0 ? <p className="text-center text-2xl font-bold text-slate-400 mt-20">킵고잉🐾</p> :
             wrongAnswers.map(q => (
               <div key={q.id} className="bg-white p-6 rounded-3xl shadow-md border-l-8 border-red-400 mb-4">
                 <p className="text-xl font-bold mb-2">Q. {q.question}</p>
